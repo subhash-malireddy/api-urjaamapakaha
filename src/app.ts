@@ -19,7 +19,13 @@ const app: FastifyPluginAsync<AppOptions> = async (
   opts
 ): Promise<void> => {
   // Place here your custom code!
-
+  fastify.addHook("onRequest", (request, reply, done) => {
+    if (request.method !== "GET") {
+      //* return notFound instead of methodNotAllowed
+      return reply.notFound();
+    }
+    done();
+  });
   // Do not touch the following lines
 
   // This loads all plugins defined in plugins
@@ -40,6 +46,10 @@ const app: FastifyPluginAsync<AppOptions> = async (
     options: opts,
     forceESM: true
   })
+
+  fastify.setNotFoundHandler((_req, reply) => {
+    return reply.notFound();
+  });
 }
 
 export default app
