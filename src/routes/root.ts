@@ -17,7 +17,6 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     );
 
     const devices = await cloudApi.listDevicesByType("SMART.TAPOPLUG");
-    console.log("🚀 ~ devices:", devices);
     return devices;
   });
 
@@ -33,9 +32,6 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     },
   } ,async function (request, reply) {
     const ip = request.params.ip
-    console.log("🚀 ~ constroot:FastifyPluginAsync= ~ ip:", ip)
-    console.log("🚀 ~ constroot:FastifyPluginAsync= ~ process.env.TAPO_USER:", process.env.TAPO_USER)
-    console.log("🚀 ~ constroot:FastifyPluginAsync= ~ process.env.TAPO_PWD!:", process.env.TAPO_PWD!)
     try {
       const device = await loginDeviceByIp(
         process.env.TAPO_USER!,
