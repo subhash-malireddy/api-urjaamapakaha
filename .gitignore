@@ -66,3 +66,7 @@ dist
 
 # test http files
 *.http
+
+# env files
+.env
+.env.*
