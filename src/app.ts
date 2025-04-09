@@ -2,6 +2,7 @@ import * as path from 'node:path'
 import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload'
 import { FastifyPluginAsync } from 'fastify'
 import { fileURLToPath } from 'node:url'
+import basicAuth from '@fastify/basic-auth'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -26,6 +27,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
     }
     done();
   });
+
   // Do not touch the following lines
 
   // This loads all plugins defined in plugins
@@ -45,6 +47,21 @@ const app: FastifyPluginAsync<AppOptions> = async (
     dir: path.join(__dirname, 'routes'),
     options: opts,
     forceESM: true
+  })
+
+  // Register basic auth plugin and apply it to all routes
+  fastify.register(basicAuth, {
+    validate: async (username, password, req, reply) => {
+      if (username !== process.env.API_USER || password !== process.env.API_PWD) {
+        return new Error('Invalid credentials')
+      }
+    },
+    authenticate: { realm: 'api-urjaamapakaha' }
+  })
+
+  // Apply basic auth to all routes after they are registered
+  fastify.after(() => {
+    fastify.addHook('onRequest', fastify.basicAuth)
   })
 
   fastify.setNotFoundHandler((_req, reply) => {
