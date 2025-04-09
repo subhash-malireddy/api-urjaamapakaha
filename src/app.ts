@@ -53,12 +53,10 @@ const app: FastifyPluginAsync<AppOptions> = async (
   fastify.register(basicAuth, {
     validate: async (username, password, req, reply) => {
       if (username !== process.env.AUTH_USER || password !== process.env.AUTH_PWD) {
-        console.log("🚀 ~ validate: ~ process.env.AUTH_PWD:", process.env.AUTH_PWD)
-        console.log("🚀 ~ validate: ~ process.env.AUTH_USER:", process.env.AUTH_USER)
         return new Error('Invalid credentials')
       }
     },
-    authenticate: { realm: 'api-urjaamapakaha' }
+    header: 'x-forwarded-authybasic',
   })
 
   // Apply basic auth to all routes after they are registered
