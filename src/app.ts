@@ -52,7 +52,9 @@ const app: FastifyPluginAsync<AppOptions> = async (
   // Register basic auth plugin and apply it to all routes
   fastify.register(basicAuth, {
     validate: async (username, password, req, reply) => {
-      if (username !== process.env.API_USER || password !== process.env.API_PWD) {
+      if (username !== process.env.AUTH_USER || password !== process.env.AUTH_PWD) {
+        console.log("🚀 ~ validate: ~ process.env.AUTH_PWD:", process.env.AUTH_PWD)
+        console.log("🚀 ~ validate: ~ process.env.AUTH_USER:", process.env.AUTH_USER)
         return new Error('Invalid credentials')
       }
     },
